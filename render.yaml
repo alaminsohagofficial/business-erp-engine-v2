@@ -1,0 +1,28 @@
+services:
+  # Node.js Main Express API Service
+  - type: web
+    name: business-erp-engine-api
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DISPATCH_SECRET_KEY
+        generateValue: true
+
+  # Python Sync Engine Microservice
+  - type: web
+    name: sap-sync-engine-py
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn python.api_sync_engine:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: REDIS_URL
+        sync: false
